@@ -1,0 +1,12 @@
+package com.battleship;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class BattleShipTest {
+
+    @Test
+    public void testBattleShip() {
+        Assert.assertEquals(true, false);
+    }
+}
