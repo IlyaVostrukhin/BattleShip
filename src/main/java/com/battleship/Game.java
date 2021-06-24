@@ -19,4 +19,8 @@ public class Game {
             Arrays.fill(strings, EMPTY);
         }
     }
+
+    public CellStatus[][] getPlayersField() {
+        return playersField;
+    }
 }
