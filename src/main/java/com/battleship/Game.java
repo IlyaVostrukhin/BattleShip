@@ -28,12 +28,18 @@ public class Game {
     CellStatus[][] playersField = new CellStatus[10][10];
     CellStatus[][] opponentsField = new CellStatus[10][10];
 
+    Ship[] playersShip = new Ship[10];
+    Ship[] opponentsShip = new Ship[10];
+
     public Game(){
         stage = MAIN_MENU.getStage();
         addNewEmptyField(playersField);
         addNewEmptyField(opponentsField);
         AI = Boolean.FALSE;
         playerTurn = Boolean.FALSE;
+
+        addShips(playersShip);
+        addShips(opponentsShip);
     }
 
     /**
@@ -109,5 +115,23 @@ public class Game {
             }
         }
         return Boolean.TRUE;
+    }
+
+    /**
+     * Создание набора корабля
+     */
+    public Ship[] addShips(Ship[] ships){
+        ships[0] = new Ship(1);
+        ships[1] = new Ship(1);
+        ships[2] = new Ship(1);
+        ships[3] = new Ship(1);
+        ships[4] = new Ship(2);
+        ships[5] = new Ship(2);
+        ships[6] = new Ship(2);
+        ships[7] = new Ship(3);
+        ships[8] = new Ship(3);
+        ships[9] = new Ship(4);
+
+        return ships;
     }
 }
