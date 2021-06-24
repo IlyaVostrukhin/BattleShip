@@ -1,6 +1,9 @@
 package com.views;
 
+import com.battleship.CellStatus;
+import com.battleship.Game;
 import com.views.panels.ChoosePanel;
+import com.views.panels.ControlPanel;
 import com.views.panels.MyField;
 
 import javax.swing.*;
@@ -13,6 +16,8 @@ public class View extends JFrame {
 
     private MyField myField;
     private ChoosePanel choosePanel;
+    private ControlPanel controlPanel;
+    private Game game;
 
     public View() {
         try {
@@ -27,10 +32,15 @@ public class View extends JFrame {
         setIconImage(new ImageIcon("src/main/resources/img/icon.png").getImage());
     }
 
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
     //Инициализируем UI
     public void init() {
         add(choosePanel = new ChoosePanel(this), BorderLayout.EAST);
         add(myField = new MyField(this), BorderLayout.WEST);
+        add(controlPanel = new ControlPanel(this), BorderLayout.SOUTH);
         myField.setChoosePanel(choosePanel);
         pack(); //Сжимает компоненты так, чтобы все вместились на минимальном расстоянии и не накладывались друг на друга
         revalidate(); //Считает заново положение компонентов во фрейме
@@ -38,7 +48,7 @@ public class View extends JFrame {
     }
 
     public void initMyField() {
-//        controller.loadEmptyMyField();
+
         myField.repaint(); //переотрисовка нашего игрового поля
         //установка имени радиокнопок на панели выбора корабля
         choosePanel.setNameOneDeck(4);
@@ -46,4 +56,18 @@ public class View extends JFrame {
         choosePanel.setNameThreeDeck(2);
         choosePanel.setNameFourDeck(1);
     }
+
+    public void repaintMyField(Graphics g) {
+        CellStatus[][] matrix = game.getPlayersField(); //получаем матрицу нашего поля
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                CellStatus cell = matrix[i][j]; //присваиваем боксу значение элемента матрицы
+                if (cell == null) continue;
+                //подгружаем картинку на панель нашего игрового поля
+                g.drawImage(new ImageIcon("src/main/resources/img/sea.png").getImage(),
+                        i * 40 + 20, j * 40 + 20, myField);
+            }
+        }
+    }
+
 }

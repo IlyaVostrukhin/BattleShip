@@ -17,7 +17,7 @@ public class MyField extends JPanel {
 
     public MyField(View view) {
         this.view = view;
-        this.setPreferredSize(new Dimension(400, 400)); //Размер поля
+        this.setPreferredSize(new Dimension(440, 440)); //Размер поля
         this.addMouseListener(new ActionMouse()); //Добавляем слушатель
     }
 
@@ -28,5 +28,6 @@ public class MyField extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        view.repaintMyField(g);
     }
 }

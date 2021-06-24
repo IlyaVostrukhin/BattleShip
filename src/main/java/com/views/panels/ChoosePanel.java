@@ -72,8 +72,7 @@ public class ChoosePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        ImageIcon icon = new ImageIcon("src/main/resources/img/info.png");
-        g.drawImage(icon.getImage(), 2, 2, this);
+        g.drawImage(new ImageIcon("src/main/resources/img/info.png").getImage(), 2, 2, this);
     }
 
     public void setNameOneDeck(int count) {
