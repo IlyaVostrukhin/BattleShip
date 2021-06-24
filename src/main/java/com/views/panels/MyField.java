@@ -1,6 +1,7 @@
-package com.views;
+package com.views.panels;
 
 import com.actions.ActionMouse;
+import com.views.View;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,11 +13,16 @@ import java.awt.*;
 public class MyField extends JPanel {
 
     private View view;
+    private ChoosePanel choosePanel;
 
     public MyField(View view) {
         this.view = view;
         this.setPreferredSize(new Dimension(400, 400)); //Размер поля
         this.addMouseListener(new ActionMouse()); //Добавляем слушатель
+    }
+
+    public void setChoosePanel(ChoosePanel choosePanel) {
+        this.choosePanel = choosePanel;
     }
 
     @Override

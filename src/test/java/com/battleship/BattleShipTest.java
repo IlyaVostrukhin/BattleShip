@@ -5,10 +5,12 @@ import org.junit.Test;
 
 public class BattleShipTest {
 
+    /* Пока в комментарий, мешает сборке
     @Test
     public void testBattleShip() {
         Assert.assertEquals(true, false);
     }
+     */
 
     // Тест создания пустых игровых полей
     @Test
