@@ -12,9 +12,9 @@ public class BattleShipTest {
 
     // Тест создания пустых игровых полей
     @Test
-    public void testAddEmtyFields(){
+    public void testAddEmptyFields(){
         Game game = new Game();
-        Assert.assertEquals(game.playersField[0][10], CellStatus.EMPTY);
-        Assert.assertEquals(game.opponentsField[10][0], CellStatus.EMPTY);
+        Assert.assertEquals(game.playersField[0][9], CellStatus.EMPTY);
+        Assert.assertEquals(game.opponentsField[9][0], CellStatus.EMPTY);
     }
 }
