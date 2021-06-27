@@ -7,8 +7,16 @@ import static com.battleship.CellStatus.EMPTY;
 import static com.battleship.CellStatus.SHIP;
 import static com.battleship.CellStatus.HIT;
 import static com.battleship.GameStage.MAIN_MENU;
+import static com.battleship.Player.AI_NAME;
+import static com.battleship.Player.PLAYER_1;
+import static com.battleship.Player.PLAYER_2;
 
 public class Game {
+
+    /**
+     * Игрок
+     */
+    Player player;
 
     /**
      * Этап игры
@@ -16,9 +24,12 @@ public class Game {
     String stage;
 
     /**
-     * Режим игры (с ПК - true, c человеком - false)
+     * Оппонент (true - Компьютер, false - Человек)
+     * Для проверки значения метод isComputerOpponent()
+     * Для утсановки AI в true - метод setComputerOpponent()
+     * Для установки AI в false - метод setPlayerOpponent()
      */
-    boolean AI;
+    private boolean computerOpponent;
 
     /**
      * Чей ход (true - игрока, false - соперника)
@@ -32,14 +43,48 @@ public class Game {
     Ship[] opponentsShip = new Ship[10];
 
     public Game(){
+        player = new Player();
+        player.setName(setPlayerName());
+
         stage = MAIN_MENU.getStage();
         addNewEmptyField(playersField);
         addNewEmptyField(opponentsField);
-        AI = Boolean.FALSE;
+
+        setPlayerOpponent(); //По умолчанию игра против ПК отключена
         playerTurn = Boolean.FALSE;
 
         addShips(playersShip);
         addShips(opponentsShip);
+    }
+
+    /**
+     * Запрашивает у игрока имя и сохраняет его в сущности Player
+     *
+     */
+    public String setPlayerName(){
+        // ToDo создать метод и реализовать запрос у игрока его имени, по умолчанию возвращать имя "player1"
+
+
+        return PLAYER_1;
+    }
+
+    /**
+     * Добавляет оппонента в игру
+     * @return сущность Player
+     */
+    public Player addOpponent(){
+        Player opponent = new Player(AI_NAME);
+
+        if(!isComputerOpponent()){
+            // ToDo создать метод и реализовать запрос имени оппонента у стороннего апи
+
+
+            if(PLAYER_1.equals(opponent.getName())){
+                opponent.setName(PLAYER_2);
+            }
+        }
+
+        return opponent;
     }
 
     /**
@@ -56,17 +101,35 @@ public class Game {
     }
 
     /**
+     * Метод проверки значения выбора оппонента
+     * @return true - для Компьютер
+     */
+    public boolean isComputerOpponent() {
+        return computerOpponent;
+    }
+
+    /**
      * Установка режима игры с ПК
      */
-    public void setAIgameMode(){
-        AI = Boolean.TRUE;
+    public void setComputerOpponent(){
+        computerOpponent = Boolean.TRUE;
     }
 
     /**
      * Установка режима игры с человеком
      */
-    public void setPlayersGameMode(){
-        AI = Boolean.FALSE;
+    public void setPlayerOpponent(){
+        computerOpponent = Boolean.FALSE;
+    }
+
+    /**
+     * Главный метод матча, вызывается для этапа Battle
+     */
+    public void battle(){
+
+        shoot(player);
+
+        turnUp();
     }
 
     /**
@@ -85,7 +148,6 @@ public class Game {
      */
     public void turnUp(){
         playerTurn = !playerTurn;
-        shoot();
     }
 
     /**
@@ -99,9 +161,21 @@ public class Game {
 
     /**
      * Выстрел игрока
+     * @param player - игрок, осуществляющий ход
+     *
      */
-    public void shoot(){
-        //ToDo: реализовать метод выстрела
+    public void shoot(Player player){
+        int x = 0;
+        int y = 0;
+
+        // ToDo создать метод и реализовать в нем запрос у игрока координат выстрела, записать их в x, y
+        // данный метод должен вернуть окончательные координаты, т.е. метод не принимает от игрока недопустымый выстрел:
+        // - не принимать повторные координаты (нужна проверка статуса ячейки / элемента поля)
+
+
+        int[] cell = player.shoot(x, y);
+
+        // ToDo создать метод и реализовать в нем обработку координат выстрела
     }
 
     /**
@@ -120,7 +194,7 @@ public class Game {
     /**
      * Создание набора корабля
      */
-    public Ship[] addShips(Ship[] ships){
+    public void addShips(Ship[] ships){
         ships[0] = new Ship(1);
         ships[1] = new Ship(1);
         ships[2] = new Ship(1);
@@ -131,7 +205,5 @@ public class Game {
         ships[7] = new Ship(3);
         ships[8] = new Ship(3);
         ships[9] = new Ship(4);
-
-        return ships;
     }
 }
