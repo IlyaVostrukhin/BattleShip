@@ -6,7 +6,10 @@ import java.util.Random;
 import static com.battleship.CellStatus.EMPTY;
 import static com.battleship.CellStatus.SHIP;
 import static com.battleship.CellStatus.HIT;
+import static com.battleship.GameStage.BEGIN;
+import static com.battleship.GameStage.END;
 import static com.battleship.GameStage.MAIN_MENU;
+import static com.battleship.GameStage.WAITING;
 import static com.battleship.Player.AI_NAME;
 import static com.battleship.Player.PLAYER_1;
 import static com.battleship.Player.PLAYER_2;
@@ -21,7 +24,7 @@ public class Game {
     /**
      * Этап игры
      */
-    String stage;
+    private String stage;
 
     /**
      * Оппонент (true - Компьютер, false - Человек)
@@ -34,7 +37,12 @@ public class Game {
     /**
      * Чей ход (true - игрока, false - соперника)
      */
-    boolean playerTurn;
+    private boolean playerTurn;
+
+    /**
+     * Закончил ли игрок подготовку первым
+     */
+    boolean first;
 
     CellStatus[][] playersField = new CellStatus[10][10];
     CellStatus[][] opponentsField = new CellStatus[10][10];
@@ -123,23 +131,143 @@ public class Game {
     }
 
     /**
+     * Процесс этапа игры Главное меню
+     */
+    public void mainMenu(){
+
+    }
+
+    /**
+     * Процесс этапа игры Подготовка
+     */
+    public void registration(){
+
+    }
+
+    /**
+     * Процесс этапа игры Ожидание
+     */
+    public void waiting(){
+        if (WAITING.getStage().equals(getOpponentStage())){
+            stage = BEGIN.getStage();
+            sendPlayerStage();
+        } else {
+            setFirst();
+            getBeginOpponentStage();
+        }
+    }
+
+    /**
+     * Метод запрашивает у соперника его текущий этап игры
+     */
+    public String getOpponentStage(){
+        // ToDo Написать реализацию получения от соперника этапа игры
+        return "заглушка"; // заглушка
+    }
+
+    /**
+     * Метод отправляет сопернику текущий этап игры
+     */
+    public void sendPlayerStage(){
+        // ToDo Написать реализацию отправки сопернику этапа игры
+
+    }
+
+    /**
+     * Метод-ждун - ожидает сигнала от соперника о переходе к этапу Начало
+     */
+    public void getBeginOpponentStage(){
+        String currentOpponentStage = "";
+
+        while(BEGIN.getStage().equals(currentOpponentStage)) {
+            currentOpponentStage = getOpponentStage();
+            // ToDo Нужен слип, чтобы ддосить с интервалом 1 раз в сек.
+        }
+        stage = BEGIN.getStage();
+    }
+
+    /**
+     * Процесс этапа игры Начало
+     */
+    public void begin(){
+            setPlayersTurn();
+    }
+
+    /**
+     * Передача результата выбора хода оппоненту
+     */
+    private void setPlayersTurn() {
+        if(isComputerOpponent()) {
+            setPlayerTurn(roulette());
+            return;
+        }
+
+        if(isFirst()) {
+            setPlayerTurn(roulette());
+            sendPlayerTurn(playerTurn);
+            return;
+        }
+
+        /*
+         * Принять результат жеребьевки от соперника
+        */
+        // ToDo Cоздать метод и реализовать получение от оппонента результатов рулетки
+
+        boolean opponentTurn = (roulette()); //заглушка, пока нет метода принимающего результат рулетки от соперника
+
+        setPlayerTurn(!opponentTurn);
+    }
+
+    /**
+     * Метод отправляющий сопернику результат жеребьевки
+     * @param playerTurn - результат жеребьевки
+     */
+    public void sendPlayerTurn(boolean playerTurn){
+        // ToDo отправить результат жеребьевки
+    }
+
+    /**
+     * Проверка, закончил ли подготовку игрок раньше соперника
+     */
+    public boolean isFirst(){
+        return first;
+    }
+
+    /**
+     * Установка признака, что игрок первым закончил подготовку
+     */
+    public void setFirst(){
+        first = Boolean.TRUE;
+    }
+
+    /**
      * Главный метод матча, вызывается для этапа Battle
      */
     public void battle(){
+        if(!isGameOver()){
+            shoot(player);
+            turnUp();
+        } else {
+            stage = END.getStage();
+            // ToDo создать метод и реализовать окончание игры
+        }
+    }
 
-        shoot(player);
+    /**
+     * Процесс этапа игры Конец игры
+     */
+    public void end(){
 
-        turnUp();
     }
 
     /**
      * Выбор игрока, начинающего игру
      */
-    public void roulette(){
+    public boolean roulette(){
         // Так как данный класс будет у каждого игрока свой, нужно запускать у игрока,
         // который первый закончил этап подготовки,
         // результат передать другому игроку - метод setPlayersTurn()
-        playerTurn = new Random().nextBoolean();
+        return new Random().nextBoolean();
     }
 
     /**
@@ -150,14 +278,6 @@ public class Game {
         playerTurn = !playerTurn;
     }
 
-    /**
-     * Принять результат выбора хода от соперника
-     * только если игрок последним закончил
-     * этап Подготовки
-     */
-    public void setPlayerTurn(boolean opponentsTurn){
-        playerTurn = !opponentsTurn;
-    }
 
     /**
      * Выстрел игрока
@@ -205,5 +325,25 @@ public class Game {
         ships[7] = new Ship(3);
         ships[8] = new Ship(3);
         ships[9] = new Ship(4);
+    }
+
+    public String getStage() {
+        return stage;
+    }
+
+    public boolean isPlayerTurn() {
+        return playerTurn;
+    }
+
+    public void setPlayerTurnTRUE(){
+        playerTurn = Boolean.TRUE;
+    }
+
+    public void setPlayerTurnFALSE(){
+        playerTurn = Boolean.FALSE;
+    }
+
+    public void setPlayerTurn(boolean rulleteResult){
+        playerTurn = playerTurn;
     }
 }
