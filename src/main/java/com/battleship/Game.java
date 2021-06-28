@@ -1,7 +1,6 @@
 package com.battleship;
 
 import java.util.Arrays;
-import java.util.Random;
 
 import static com.battleship.CellStatus.EMPTY;
 import static com.battleship.CellStatus.SHIP;
@@ -54,7 +53,7 @@ public class Game {
     /**
      * Процесс этапа игры Главное меню
      */
-    public void mainMenu(){
+    private void mainMenu(){
         // Очистка игровых данных, нужно при сбросе игры или окончании игры
         clear();
 
@@ -69,7 +68,7 @@ public class Game {
     /**
      * Расстановка кораблей
      */
-    public void registration(){
+    private void registration(){
 
         // ToDo создать и реализовать сервис расстановки кораблей
 
@@ -80,7 +79,7 @@ public class Game {
     /**
      * Ожидание оппонента
      */
-    public void waiting(){
+    private void waiting(){
         // Устанавливаем статус игрока - ожидает
         player.setWaiting(Boolean.TRUE);
 
@@ -100,7 +99,7 @@ public class Game {
     /**
      * Главный метод матча, вызывается для этапа Battle
      */
-    public void battle(){
+    private void battle(){
         // Только в свой ход
         if(playerTurn){
             // Проверяем не окончена ли игра
@@ -131,7 +130,7 @@ public class Game {
     /**
      * Конец игры
      */
-    public void end(){
+    private void end(){
         // ToDo реализовать сервис окончания игры
 
         // Возвращаемся в главное меню
@@ -141,7 +140,7 @@ public class Game {
     /**
      * Создание набора корабля
      */
-    public void addShips(Ship[] ships){
+    private void addShips(Ship[] ships){
         ships[0] = new Ship(1);
         ships[1] = new Ship(1);
         ships[2] = new Ship(1);
@@ -180,7 +179,7 @@ public class Game {
      * Переход хода
      * Метод выполняется после завершения всех действий предыдущего хода
      */
-    public void turnUp(){
+    private void turnUp(){
         playerTurn = !playerTurn;
         // ToDo передать инф оппоненту о передаче хода
     }
@@ -189,7 +188,7 @@ public class Game {
      * Выстрел игрока
      * @param player - игрок, осуществляющий ход
      */
-    public void shoot(Player player){
+    private void shoot(Player player){
         int x = 0;
         int y = 0;
 
@@ -208,7 +207,7 @@ public class Game {
      * Проверка окончания игры
      * true - если ни на одном поле нет ячеек ship || hit
      */
-    public boolean isGameOver(){
+    private boolean isGameOver(){
         for (CellStatus[] cellStatuses1 : playersField) {
             for (CellStatus cellStatuses2 : cellStatuses1) {
                 return !(cellStatuses2 == SHIP || cellStatuses2 == HIT);
