@@ -6,10 +6,7 @@ import java.util.Random;
 import static com.battleship.CellStatus.EMPTY;
 import static com.battleship.CellStatus.SHIP;
 import static com.battleship.CellStatus.HIT;
-import static com.battleship.GameStage.BEGIN;
-import static com.battleship.GameStage.END;
-import static com.battleship.GameStage.MAIN_MENU;
-import static com.battleship.GameStage.WAITING;
+import static com.battleship.GameStage.*; // загружаем весь список для использоваия в этом классе
 import static com.battleship.Player.AI_NAME;
 import static com.battleship.Player.PLAYER_1;
 import static com.battleship.Player.PLAYER_2;
@@ -54,7 +51,6 @@ public class Game {
         player = new Player();
         player.setName(setPlayerName());
 
-        stage = MAIN_MENU.getStage();
         addNewEmptyField(playersField);
         addNewEmptyField(opponentsField);
 
@@ -63,6 +59,8 @@ public class Game {
 
         addShips(playersShip);
         addShips(opponentsShip);
+
+        mainMenu();
     }
 
     /**
@@ -134,26 +132,46 @@ public class Game {
      * Процесс этапа игры Главное меню
      */
     public void mainMenu(){
+        // Актуализируем этап Игры
+        stage = MAIN_MENU.getStage();
 
+        // ToDo реализовать сервис работы в главном меню
+
+        // Переходим к этапу расстановки кораблей
+        registration();
     }
 
     /**
      * Процесс этапа игры Подготовка
      */
     public void registration(){
+        // Актуализируем этап Игры
+        stage = REGISTRATION.getStage();
 
+        // ToDo создать и реализовать сервис расстановки кораблей
+
+        // После расстановки переходим к ожиданию оппонента
+        waiting();
     }
 
     /**
      * Процесс этапа игры Ожидание
      */
     public void waiting(){
+        // Актуализируем этап Игры
+        stage = WAITING.getStage();
+
+        // Проверяем, если оппонент ждет - начинаем игру
         if (WAITING.getStage().equals(getOpponentStage())){
-            stage = BEGIN.getStage();
-            sendPlayerStage();
+            // Запрашиваем результаты жребия и начинаем игру
+            giveRouletteResult();
+            battle();
         } else {
-            setFirst();
-            getBeginOpponentStage();
+            // Иначе фиксируем, бросаем жребий и ждем, когда оппонент попросит результаты
+            isOpponentRequestRouletteResult(roulette());
+            // Предыдущий метод в цикле ждет оппонента и возвращает управление, когда оппонент готов к началу
+            // Начинаем игру
+            battle();
         }
     }
 
@@ -166,31 +184,23 @@ public class Game {
     }
 
     /**
-     * Метод отправляет сопернику текущий этап игры
+     * Метод запрашивает результаты жребия оппонента
      */
-    public void sendPlayerStage(){
-        // ToDo Написать реализацию отправки сопернику этапа игры
+    public void giveRouletteResult(){
 
+        // ToDo Написать реализацию метода получения результатов жребьевки
+
+        playerTurn = false; // заглушка. Заменить реализацией (Важно, результаты нужно инвертировать. см. isOpponentRequestRouletteResult()
     }
 
     /**
-     * Метод-ждун - ожидает сигнала от соперника о переходе к этапу Начало
+     * Метод-ждун - ожидает от соперника запрос результатов жребия
      */
-    public void getBeginOpponentStage(){
-        String currentOpponentStage = "";
+    public void isOpponentRequestRouletteResult(boolean rouletteResult){
 
-        while(BEGIN.getStage().equals(currentOpponentStage)) {
-            currentOpponentStage = getOpponentStage();
-            // ToDo Нужен слип, чтобы ддосить с интервалом 1 раз в сек.
-        }
-        stage = BEGIN.getStage();
-    }
+            // ToDo Реализовать ожидание запроса оппонентов результатов жребия
+            // Отправить результаты
 
-    /**
-     * Процесс этапа игры Начало
-     */
-    public void begin(){
-            setPlayersTurn();
     }
 
     /**
@@ -244,20 +254,43 @@ public class Game {
      * Главный метод матча, вызывается для этапа Battle
      */
     public void battle(){
-        if(!isGameOver()){
-            shoot(player);
-            turnUp();
-        } else {
-            stage = END.getStage();
-            // ToDo создать метод и реализовать окончание игры
+        // Актуализируем этап игры
+        // даже с учетом того, что метод рекурсивный проверка будет дороже, поэтому будет каждый раз присвоение
+        stage = BATTLE.getStage();
+
+        // Проверяем не окончена ли игра
+        if(isGameOver()){
+            // Игра окончена - вызываем метод окончания игры
+            end();
+            return;
         }
+
+        // Ждем выстрела игрока или других действий
+        shoot(player);
+
+        // Передаем ход
+        turnUp();
+
+        // Проверить не окончена ли игра
+        if(isGameOver()){
+            // Игра окончена - вызываем метод окончания игры
+            end();
+            return;
+        }
+
+        // Вызываем метод battle() пока игра не закончится
+        battle();
     }
 
     /**
      * Процесс этапа игры Конец игры
      */
     public void end(){
+        stage = END.getStage();
+        // ToDo реализовать сервис окончания игры
 
+        // Возвращаемся в главное меню
+        mainMenu();
     }
 
     /**
@@ -282,7 +315,6 @@ public class Game {
     /**
      * Выстрел игрока
      * @param player - игрок, осуществляющий ход
-     *
      */
     public void shoot(Player player){
         int x = 0;
@@ -291,6 +323,7 @@ public class Game {
         // ToDo создать метод и реализовать в нем запрос у игрока координат выстрела, записать их в x, y
         // данный метод должен вернуть окончательные координаты, т.е. метод не принимает от игрока недопустымый выстрел:
         // - не принимать повторные координаты (нужна проверка статуса ячейки / элемента поля)
+        // Метод должен реагировать на нажатие доступных кнопок меню (Выход) и корректно обрабатывать их
 
 
         int[] cell = player.shoot(x, y);
