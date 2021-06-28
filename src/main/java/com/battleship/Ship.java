@@ -17,17 +17,12 @@ public class Ship {
      * Координаты начала корабля
      * начало верх либо левая сторона
      */
-    private Integer[] coordinates = new Integer[2];
-
-    /**
-     * Статус корабля (под вопросом) status
-     */
-    private String status;
+    private Integer[][] coordinates;
 
     public Ship(int type) {
         this.type = type;
         horizontal = true;
-        status = ShipStatus.DODCKED.getStage();
+        coordinates = new Integer[2][type];
     }
 
     public int getType() {
@@ -47,19 +42,11 @@ public class Ship {
         return horizontal;
     }
 
-    public Integer[] getCoordinates() {
+    public Integer[][] getCoordinates() {
         return coordinates;
     }
 
-    public void setCoordinates(Integer[] coordinates) {
+    public void setCoordinates(Integer[][] coordinates) {
         this.coordinates = coordinates;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

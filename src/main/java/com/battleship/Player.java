@@ -13,27 +13,14 @@ public class Player {
     public static final String PLAYER_1 = "Player1";
 
     /**
-     * Имя оппонента-человека по-умолчанию
+     * Ожидает начала игры
      */
-    public static final String PLAYER_2 = "Player2";
+    private boolean waiting;
 
-    /**
-     * Имя оппонента-компьютера по-умолчанию
-     */
-    public static final String AI_NAME = "Computer";
 
-    /**
-     * Конструктор игрока
-     */
-    public Player() {
-    }
-
-    /**
-     * Конструктор создания соперника
-     * @param name - имя ПК
-     */
     public Player(String name) {
         this.name = name;
+        this.waiting = Boolean.FALSE;
     }
 
     /**
@@ -51,7 +38,16 @@ public class Player {
         return name;
     }
 
+    // Установить пользовательское имя игрока
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isWaiting() {
+        return waiting;
+    }
+
+    public void setWaiting(boolean waiting) {
+        this.waiting = waiting;
     }
 }
