@@ -136,7 +136,7 @@ public class Game {
         // ToDo реализовать сервис окончания игры
 
         // Возвращаемся в главное меню
-        mainMenu();
+        // mainMenu();
     }
 
     /**
@@ -231,7 +231,15 @@ public class Game {
      * Очистка игровых данных
      */
     private void clear(){
+        // Обнуляем статус ожидания
         player.setWaiting(Boolean.FALSE);
+
+        // Очищаем игровые поля
+        addNewEmptyField(playersField);
+        addNewEmptyField(opponentsField);
+
+        // Обнуляем данные о праве хода
+        playerTurn = Boolean.FALSE;
 
         // ToDo Очистка игровых данных, нужно при сбросе игры или окончании игры
 
