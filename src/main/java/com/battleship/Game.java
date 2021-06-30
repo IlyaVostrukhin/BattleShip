@@ -1,10 +1,12 @@
 package com.battleship;
 
-import java.util.Arrays;
+import com.views.View;
 
-import static com.battleship.CellStatus.EMPTY;
-import static com.battleship.CellStatus.SHIP;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.battleship.CellStatus.HIT;
+import static com.battleship.CellStatus.SHIP;
 import static com.battleship.Player.PLAYER_1;
 
 public class Game {
@@ -22,14 +24,16 @@ public class Game {
     /**
      *  Игровые поля
      */
-    CellStatus[][] playersField = new CellStatus[10][10];
-    CellStatus[][] opponentsField = new CellStatus[10][10];
+    Cell[][] playersField = new Cell[10][10];
+    Cell[][] opponentsField = new Cell[10][10];
 
     /**
      * Массив кораблей
      */
-    Ship[] playersShip = new Ship[10];
-    Ship[] opponentsShip = new Ship[10];
+    private List<Ship> shipsOneDeck = new ArrayList<>(); //список всех наших однопалубных кораблей
+    private List<Ship> shipsTwoDeck = new ArrayList<>(); //список всех наших двухпалубных кораблей
+    private List<Ship> shipsThreeDeck = new ArrayList<>(); //список всех наших трехпалубных кораблей
+    private List<Ship> shipsFourDeck = new ArrayList<>(); //список всех наших четырехпалубных кораблей
 
     public Game(){
         // Добавляем в игру игроков
@@ -38,16 +42,69 @@ public class Game {
         // Игрок, который раньше расставит корабли будет первым ходить
         playerTurn = Boolean.FALSE;
 
-        // Добавляем в игру поля
-        addNewEmptyField(playersField);
-        addNewEmptyField(opponentsField);
-
-        // Добавляем корабли
-        addShips(playersShip);
-        addShips(opponentsShip);
-
         // Запускаем Главное меню
-        mainMenu();
+//        mainMenu();
+    }
+
+    public Cell[][] getPlayersField() {
+        return playersField;
+    }
+
+    public void setPlayersField(Cell[][] playersField) {
+        this.playersField = playersField;
+    }
+
+    public Cell[][] getOpponentsField() {
+        return opponentsField;
+    }
+
+    public void setOpponentsField(Cell[][] opponentsField) {
+        this.opponentsField = opponentsField;
+    }
+
+    public List<Ship> getShipsOneDeck() {
+        return shipsOneDeck;
+    }
+
+    public void setShipsOneDeck(List<Ship> shipsOneDeck) {
+        this.shipsOneDeck = shipsOneDeck;
+    }
+
+    public List<Ship> getShipsTwoDeck() {
+        return shipsTwoDeck;
+    }
+
+    public void setShipsTwoDeck(List<Ship> shipsTwoDeck) {
+        this.shipsTwoDeck = shipsTwoDeck;
+    }
+
+    public List<Ship> getShipsThreeDeck() {
+        return shipsThreeDeck;
+    }
+
+    public void setShipsThreeDeck(List<Ship> shipsThreeDeck) {
+        this.shipsThreeDeck = shipsThreeDeck;
+    }
+
+    public List<Ship> getShipsFourDeck() {
+        return shipsFourDeck;
+    }
+
+    public void setShipsFourDeck(List<Ship> shipsFourDeck) {
+        this.shipsFourDeck = shipsFourDeck;
+    }
+
+    /**
+     * Получение всех наших кораблей
+     * @return список ВСЕХ наших кораблей
+     */
+    public List<Ship> getAllShips() {
+        List<Ship> allCellsOfShips = new ArrayList<>();
+        allCellsOfShips.addAll(shipsFourDeck);
+        allCellsOfShips.addAll(shipsThreeDeck);
+        allCellsOfShips.addAll(shipsTwoDeck);
+        allCellsOfShips.addAll(shipsOneDeck);
+        return allCellsOfShips;
     }
 
     /**
@@ -62,18 +119,6 @@ public class Game {
         // ToDo реализовать сервис работы в главном меню
 
         // Переходим к этапу расстановки кораблей
-        registration();
-    }
-
-    /**
-     * Расстановка кораблей
-     */
-    private void registration(){
-
-        // ToDo создать и реализовать сервис расстановки кораблей
-
-        // После расстановки переходим к ожиданию оппонента
-        waiting();
     }
 
     /**
@@ -140,32 +185,114 @@ public class Game {
     }
 
     /**
-     * Создание набора корабля
+     * Добавляет заданный корабль в соответствующий список кораблей в зависимости от количества палуб
      */
-    private void addShips(Ship[] ships){
-        ships[0] = new Ship(1);
-        ships[1] = new Ship(1);
-        ships[2] = new Ship(1);
-        ships[3] = new Ship(1);
-        ships[4] = new Ship(2);
-        ships[5] = new Ship(2);
-        ships[6] = new Ship(2);
-        ships[7] = new Ship(3);
-        ships[8] = new Ship(3);
-        ships[9] = new Ship(4);
-    }
-
-    /**
-     * Добавляет пустое игровое поле
-     */
-    private static void addNewEmptyField(CellStatus[][] field){
-        for (CellStatus[] strings : field) {
-            Arrays.fill(strings, EMPTY);
+    public void addShip(Ship ship) {
+        int shipType = ship.getType();
+        switch (shipType) {
+            case 1: {
+                //проверка - если в списке уже есть максимальное кол-во кораблей данного типа (кол-во палуб),
+                //то вызывается соответствующее информационное окно, иначе добавляем корабль в нужный список
+                if (shipsOneDeck.size() < 4) {
+                    shipsOneDeck.add(ship);
+                    for (Cell cell : ship.getCoordinates()) {
+                        addCellInField(playersField, cell);
+                    }
+                } else View.alert("Больше однопалубных нельзя. Максимально возможно - 4.");
+                break;
+            }
+            case 2: {
+                if (shipsTwoDeck.size() < 3) {
+                    shipsTwoDeck.add(ship);
+                    for (Cell cell : ship.getCoordinates()) {
+                        addCellInField(playersField, cell);
+                    }
+                } else View.alert("Больше двухпалубных нельзя. Максимально возможно - 3.");
+                break;
+            }
+            case 3: {
+                if (shipsThreeDeck.size() < 2) {
+                    shipsThreeDeck.add(ship);
+                    for (Cell cell : ship.getCoordinates()) {
+                        addCellInField(playersField, cell);
+                    }
+                } else View.alert("Больше трехпалубных нельзя. Максимально возможно - 2.");
+                break;
+            }
+            case 4: {
+                if (shipsFourDeck.size() < 1) {
+                    shipsFourDeck.add(ship);
+                    for (Cell cell : ship.getCoordinates()) {
+                        addCellInField(playersField, cell);
+                    }
+                } else View.alert("Четырехпалубный уже добавлен. Максимально возможно - 1.");
+                break;
+            }
         }
     }
 
-    public CellStatus[][] getPlayersField() {
-        return playersField;
+    /**
+     * Удаление корабля из соответствующего списка - используется в процессе расстановки и удалении кораблей на своем игровом поле
+     * @param ship - удаляемый корабль
+     */
+    public void removeShip(Ship ship) {
+        //если корабль содержится в одном из списков, то перебираем все ячейки списка,
+        //меняем значение их картинки на EMPTY и добавляем в матрицу нашего игрового поля эту ячейку
+        if (shipsOneDeck.contains(ship)) {
+            for (Cell cell : ship.getCoordinates()) {
+                cell.setStatus(CellStatus.SEA);
+                addCellInField(playersField, cell);
+                shipsOneDeck.remove(ship);
+            }
+        } else if (shipsTwoDeck.contains(ship)) {
+            for (Cell cell : ship.getCoordinates()) {
+                cell.setStatus(CellStatus.SEA);
+                addCellInField(playersField, cell);
+                shipsTwoDeck.remove(ship);
+            }
+        } else if (shipsThreeDeck.contains(ship)) {
+            for (Cell cell : ship.getCoordinates()) {
+                cell.setStatus(CellStatus.SEA);
+                addCellInField(playersField, cell);
+                shipsThreeDeck.remove(ship);
+            }
+        } else if (shipsFourDeck.contains(ship)) {
+            for (Cell cell : ship.getCoordinates()) {
+                cell.setStatus(CellStatus.SEA);
+                addCellInField(playersField, cell);
+                shipsFourDeck.remove(ship);
+            }
+        }
+    }
+
+    /**
+     * метод, устанавливающий значение указанной ячейки в указанную матрицу (игровое поле)
+     * @param field поле игрока или оппонента
+     * @param cell ячейка
+     */
+    public void addCellInField(Cell[][] field, Cell cell) {
+        //по координатам ячейки вычисляем индексы соответствующего места в матрице (игровом поле)
+        int i = cell.getX() / 40;
+        int j = cell.getY() / 40;
+        field[i][j] = cell;
+    }
+
+    /**
+     * Метод, возвращающий ячейку из указанного игрового поля по координатам панели игрового поля
+     * @param field поле игрока или оппонента
+     * @param x координата по x
+     * @param y координата по y
+     * @return найденная ячейка поля или null
+     */
+    public Cell getCell(Cell[][] field, int x, int y) {
+        int i = x / 40;
+        int j = y / 40;
+        int length = field.length - 1;
+        //если координаты указывают на элемент, индекс которого больше размерности матрицы, то возвращаем null
+        if (!(i > length || j > length)) {
+            return field[i][j];
+        }
+        return null;
     }
 
     /**
@@ -216,12 +343,12 @@ public class Game {
 
     /**
      * Проверка окончания игры
-     * true - если ни на одном поле нет ячеек ship || hit
+     * @return true - если ни одна ячейка не имеет статус ship || hit
      */
     private boolean isGameOver(){
-        for (CellStatus[] cellStatuses1 : playersField) {
-            for (CellStatus cellStatuses2 : cellStatuses1) {
-                return !(cellStatuses2 == SHIP || cellStatuses2 == HIT);
+        for (Cell[] cells1 : playersField) {
+            for (Cell cells2 : cells1) {
+                return !(cells2.getStatus() == SHIP || cells2.getStatus() == HIT);
             }
         }
         return Boolean.TRUE;

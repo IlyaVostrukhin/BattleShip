@@ -16,7 +16,7 @@ public class BattleShipTest {
     @Test
     public void testAddEmptyFields(){
         Game game = new Game();
-        Assert.assertEquals(game.playersField[0][9], CellStatus.EMPTY);
-        Assert.assertEquals(game.opponentsField[9][0], CellStatus.EMPTY);
+        Assert.assertEquals(game.playersField[0][9], CellStatus.SEA);
+        Assert.assertEquals(game.opponentsField[9][0], CellStatus.SEA);
     }
 }
