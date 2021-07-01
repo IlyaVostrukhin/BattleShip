@@ -266,7 +266,7 @@ public class Game {
     }
 
     /**
-     * метод, устанавливающий значение указанной ячейки в указанную матрицу (игровое поле)
+     * Установка значение указанной ячейки в указанную матрицу (игровое поле)
      * @param field поле игрока или оппонента
      * @param cell ячейка
      */
@@ -278,7 +278,7 @@ public class Game {
     }
 
     /**
-     * Метод, возвращающий ячейку из указанного игрового поля по координатам панели игрового поля
+     * Получение ячейки из указанного игрового поля по координатам панели игрового поля
      * @param field поле игрока или оппонента
      * @param x координата по x
      * @param y координата по y
@@ -362,8 +362,8 @@ public class Game {
         player.setWaiting(Boolean.FALSE);
 
         // Очищаем игровые поля
-        addNewEmptyField(playersField);
-        addNewEmptyField(opponentsField);
+        //addNewEmptyField(playersField);
+        //addNewEmptyField(opponentsField);
 
         // Обнуляем данные о праве хода
         playerTurn = Boolean.FALSE;
