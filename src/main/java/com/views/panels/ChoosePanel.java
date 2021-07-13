@@ -72,7 +72,7 @@ public class ChoosePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(new ImageIcon("src/main/resources/img/info.png").getImage(), 2, 2, this);
+        g.drawImage(new ImageIcon("src/main/resources/img/info.png").getImage(), 2, 0, this);
     }
 
     public void setNameOneDeck(int count) {
@@ -89,5 +89,27 @@ public class ChoosePanel extends JPanel {
 
     public void setNameFourDeck(int count) {
         fourDeck.setText("Четырехпалубный, осталось - " + count);
+    }
+
+    /**
+     * Получение количества палуб из блока радиокнопок
+     * @return - количество палуб
+     */
+    public int getShipType() {
+        if (oneDeck.isSelected()) return 1;
+        else if (twoDeck.isSelected()) return 2;
+        else if (threeDeck.isSelected()) return 3;
+        else if (fourDeck.isSelected()) return 4;
+        else return 0;
+    }
+
+    /**
+     * Получение числа ориентации
+     * @return 1 - вертикальная, 2 - горизонтальная
+     */
+    public int getPlacement() {
+        if (vertical.isSelected()) return 1;
+        else if (horizontal.isSelected()) return 2;
+        else return 0;
     }
 }
